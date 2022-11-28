@@ -6,7 +6,7 @@ import requests
 import re
 
 ## External data
-# Genres come coded with IDs
+# Genres come coded with ID
 DF_GENRES = pd.read_csv("data/genre_ids.csv").drop_duplicates()
 # Which streaming services I am subscribed to
 SUBSCRIPTIONS = ["Amazon Prime Video", "HBO Max", "Netflix"]
