@@ -29,8 +29,8 @@ class MovieTMDB:
         self.poster = ""
         
     def find_movie(self, query: str, year: str=""):
+        self.year = int(year)
         self.movie_info = self.get_movie_info(query=query, year=year)
-        self.year = int(re.sub("-.+", "", self.movie_info["release_date"]))
         self.providers = self.get_providers(self.movie_info["id"])
         self.rt_score = self.get_rt_score(self.movie_info["title"])
         self.lb_score = self.get_lb_score(self.movie_info["title"])
@@ -117,21 +117,24 @@ class MovieTMDB:
     def get_lb_score(self, movie_title: str) -> str:
         dash_title = dash_case(movie_title)
 
-        url = f"https://letterboxd.com/csi/film/{dash_title}_{self.year}/rating-histogram/"
+        url = f"https://letterboxd.com/csi/film/{dash_title}-{self.year}/rating-histogram/"
         page = requests.get(url)
 
         # Try URL without the year if 404 and if that doesn't work give up
         if page.status_code == 404:
             url = f"https://letterboxd.com/csi/film/{dash_title}/rating-histogram/"
             page = requests.get(url)
-            if page.status_code == 404: print("-")
+            if page.status_code == 404: return("-")
 
         soup = BeautifulSoup(page.content, "html.parser")
 
         try: 
             lb_score = soup.find("a", class_="tooltip display-rating").text
         except AttributeError:
-            lb_score = soup.find("a", class_="tooltip display-rating -highlight").text
+            try:
+                lb_score = soup.find("a", class_="tooltip display-rating -highlight").text
+            except AttributeError:
+                return("-")
             
         return(lb_score)
     
@@ -149,14 +152,4 @@ class MovieTMDB:
                            "Poster": self.poster},
                            index = [0])
         return(df)
-        
-
-
-movie = MovieTMDB()
-movie.find_movie(query="Murder on the orient express", year="1974")
-movie.find_movie(query="Beau Travail")
-movie.get_lb_score("Beau Travail")
-movie.get_movie_info(query="Murder on the orient express", year = "")
-movie.return_df()
-int(movie.year) + 1
-
+    

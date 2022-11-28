@@ -1,11 +1,12 @@
 from tmdb import MovieTMDB
+from download_lb_watchlist import download_lb_watchlist
 import pandas as pd
 
 # Import letterboxd (lb) watchlist data
-df_lb_watchlist = pd.read_csv("data/watchlist.csv")
-
+df_lb_watchlist = download_lb_watchlist("mzarchev")
+df_lb_watchlist.to_csv("data/watchlist.csv")
 # Delete df_movies if it exists from a previous loop run
-if "df_movies" in globals(): del df_movies
+# if "df_movies" in globals(): del df_movies 
 
 # Loop to extract info of all movies from watchlist
 for lb_movie, lb_year in zip(df_lb_watchlist.Name, df_lb_watchlist.Year):
@@ -21,4 +22,4 @@ for lb_movie, lb_year in zip(df_lb_watchlist.Name, df_lb_watchlist.Year):
                               ignore_index=True)
     except NameError:
         df_movies = movie.return_df()
-    
+
