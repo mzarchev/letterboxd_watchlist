@@ -3,7 +3,7 @@ from download_lb_watchlist import download_lb_watchlist
 import pandas as pd
 
 redownload = input("Start data download from beginning? [y/n]:")
-if redownload == y:
+if redownload == "y":
     df_lb_watchlist = download_lb_watchlist("mzarchev")
     df_lb_watchlist.to_csv("data/watchlist.csv")
 
@@ -27,3 +27,5 @@ if redownload == y:
 else: 
     df_lb_watchlist = pd.read_csv("data/watchlist.csv")
     df_movies = pd.read_csv("data/df_movie_info.csv")
+    
+    

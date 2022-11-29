@@ -9,7 +9,7 @@ import re
 # Genres come coded with ID
 DF_GENRES = pd.read_csv("data/genre_ids.csv").drop_duplicates()
 # Which streaming services I am subscribed to
-SUBSCRIPTIONS = ["Amazon Prime Video", "HBO Max", "Netflix"]
+SUBSCRIPTIONS = ["Amazon Prime Video", "Netflix"]
 # Append this to poster_path to get full link
 POSTER_URL = "https://image.tmdb.org/t/p/w185"
 # API access
@@ -29,9 +29,10 @@ class MovieTMDB:
         self.poster = ""
         
     def find_movie(self, query: str, year: str=""):
-        self.year = int(year)
+        self.year = int(year) if re.match("\d", year) else ""
         self.movie_info = self.get_movie_info(query=query, year=year)
         self.providers = self.get_providers(self.movie_info["id"])
+        self.providers.append(self.get_hbo_bg_provider(self.movie_info["id"]))
         self.rt_score = self.get_rt_score(self.movie_info["title"])
         self.lb_score = self.get_lb_score(self.movie_info["title"])
         self.genres = self.return_genres_list(self.movie_info["genre_ids"])
@@ -65,9 +66,28 @@ class MovieTMDB:
             available_providers = [stream["provider_name"]
                                 for stream in nl_all_streams
                                 if stream["provider_name"] in SUBSCRIPTIONS]
-            if len(available_providers) > 0: return(available_providers)
+            if available_providers: return(available_providers)
             # If not just say there is no streaming
             else: return(["No streaming available"])
+                        
+    def get_hbo_bg_provider(self, movie_id: str) -> str:
+        """ Takes TMDB id as input
+            Returns "HBO max" if available in bulgaria or an empty string if not"""
+        
+        url = f"https://www.themoviedb.org/movie/{movie_id}/watch?translate=false&locale=BG"
+
+        header = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_11_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/50.0.2661.102 Safari/537.36'}
+        page = requests.get(url, headers=header)
+        soup = BeautifulSoup(page.content, "html.parser")
+        try:
+            providers = soup.find("ul", class_="providers").find_all("a")
+        except AttributeError: 
+            return("")
+        contains_hbo = [provider["title"] for provider in providers if re.match(".+HBO Max", provider["title"])]
+        hbo_bulgaria = "HBO Max" if contains_hbo else ""
+        
+        return(hbo_bulgaria)
+
             
     def match_genre_to_id(self, genre_id: str) -> str:
         genre_matched = DF_GENRES[DF_GENRES["id"] == genre_id]
