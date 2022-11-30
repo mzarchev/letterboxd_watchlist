@@ -1,0 +1,13 @@
+name: watchlist
+title: watchlist
+username:
+account: mzarchev
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 7765875
+bundleId: 6574777
+url: https://mzarchev.shinyapps.io/watchlist/
+when: 1669850355.21756
+lastSyncTime: 1669850355.21756
+asMultiple: FALSE
+asStatic: FALSE

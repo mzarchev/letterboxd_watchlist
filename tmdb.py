@@ -30,7 +30,10 @@ class MovieTMDB:
         
     def find_movie(self, query: str, year: str=""):
         self.year = int(year) if re.match("\d", year) else ""
-        self.movie_info = self.get_movie_info(query=query, year=year)
+        try:
+            self.movie_info = self.get_movie_info(query=query, year=year)
+        except:
+            return("-")
         self.providers = self.get_providers(self.movie_info["id"])
         self.providers.append(self.get_hbo_bg_provider(self.movie_info["id"]))
         self.rt_score = self.get_rt_score(self.movie_info["title"])
