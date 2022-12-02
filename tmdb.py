@@ -24,6 +24,7 @@ class MovieTMDB:
         self.rt_score = ""
         self.lb_score = ""
         self.genres = []
+        self.description = ""
         self.director = ""
         self.cast = []
         self.poster = ""
@@ -39,6 +40,7 @@ class MovieTMDB:
         self.rt_score = self.get_rt_score(self.movie_info["title"])
         self.lb_score = self.get_lb_score(self.movie_info["title"])
         self.genres = self.return_genres_list(self.movie_info["genre_ids"])
+        self.description = self.movie_info["overview"]
         self.director, self.cast = self.get_crew_cast(self.movie_info["id"]).values()
         self.poster = POSTER_URL + self.movie_info["poster_path"]
 
@@ -171,6 +173,7 @@ class MovieTMDB:
                            "Director": self.director,
                            "Cast": [self.cast],
                            "Genres": [self.genres],
+                           "Description":  [self.description],
                            "Language": self.movie_info["original_language"],
                            "Poster": self.poster},
                            index = [0])

@@ -15,10 +15,10 @@ def check_is_genre(genre):
     return([genre in list_genres for list_genres in df_movies.Genres])
 
 
-for varnames_genre, genre in zip(varnames_genres, unique_genres):
+""" for varnames_genre, genre in zip(varnames_genres, unique_genres):
     
     df_formatted[varnames_genre] = check_is_genre(genre)
-
+ """
 df_formatted["Genres"] = [", ".join(genres_list) for genres_list in df_formatted.Genres]
     
 ## Add images to providers
@@ -29,7 +29,7 @@ def get_img_provider(list_providers):
         Return html image tag if available """
     df_available = df_providers[df_providers.provider.isin(list_providers)]
     if df_available.empty:
-        return("No providers available")
+        return("Unavailable")
     else:
         html_img = [f"<img src='{img}'height='50', style='border-radius: 10%;'></img>" for img in df_available.img]
         return(" ".join(html_img))
@@ -40,4 +40,5 @@ df_formatted["Stream on"] = df_formatted["Stream on"].apply(lambda s:get_img_pro
 df_formatted["Cast"] = df_formatted.Cast.apply(lambda s: ", ".join(s)) 
 
 # Export
-df_formatted.to_csv("data/df_formatted.csv")    
+df_formatted.to_csv("data/df_formatted.csv") 
+pd.DataFrame({"genres":unique_genres}).to_csv("data/unique_genres.csv", index=False)      
