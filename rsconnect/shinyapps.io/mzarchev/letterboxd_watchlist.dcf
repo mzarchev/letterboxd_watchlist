@@ -5,9 +5,9 @@ account: mzarchev
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 7778398
-bundleId: 6578426
+bundleId: 6601187
 url: https://mzarchev.shinyapps.io/letterboxd_watchlist/
-when: 1669921501.05321
-lastSyncTime: 1669921501.05321
+when: 1670363229.7928
+lastSyncTime: 1670363229.7928
 asMultiple: FALSE
 asStatic: FALSE

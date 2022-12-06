@@ -19,11 +19,10 @@ for lb_movie, lb_year in zip(df_lb_watchlist.Name, df_lb_watchlist.Year):
             print("\n Processed", movie.movie_info["title"], "by", movie.director, "\n")
         except NameError:
             df_movies = movie.return_df()
-    except KeyError:
+    except:
         pass
         
 
 # Export
-
 df_lb_watchlist.to_csv("data/watchlist.csv")
 df_movies.to_parquet("data/df_movie_info.parquet")

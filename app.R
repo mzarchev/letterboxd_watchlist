@@ -11,11 +11,11 @@ df_movies_formatted <-
   dplyr::select(Title, Year, Genres, Stream = Stream.on,
                 `<img src ='https://github.com/mzarchev/utils/blob/main/rt.jpg?raw=true'height=40, style='border-radius: 10%;'></img>` = RT.score,
                 `<img src ='https://github.com/mzarchev/utils/blob/main/lb.png?raw=true'height=40, style='border-radius: 10%;'></img>` = Letterboxd.score,
-                Director, Description,
+                Runtime, Director, Description,
                 poster_url = Poster, Cast, Language) |>
   dplyr::mutate(Poster = paste0("<img src='", poster_url, "'height='200', style='border-radius: 10%;'></img>"),
-                .before = Title)
-
+                .before = Title) |>
+  dplyr::mutate(Runtime = hms::hms(minutes = Runtime)) 
 
 
 ## --- UI ---
@@ -29,6 +29,7 @@ ui <- fluidPage(
                                 style = "border-radius: 50%;",
                                 src = "https://github.com/mzarchev/utils/blob/main/avtr-0-1000-0-1000-crop.jpg?raw=true"
                          )))),
+  tags$h4("Never paying for premuim"),
   br(), br(),
   
   # Sidebar with a slider input for number of bins 
@@ -50,9 +51,7 @@ ui <- fluidPage(
             inline = F
             ),
           width = 2,
-          position = "left",
-          checkboxInput("show_row",
-                        label ="show_row")
+          position = "left"
       ), 
 
       # Show a plot of the generated distribution

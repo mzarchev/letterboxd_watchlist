@@ -1,4 +1,3 @@
-# import tmdbsimple as tmdb
 from snake_case import snake_case, dash_case
 from bs4 import BeautifulSoup
 import pandas as pd
@@ -18,13 +17,14 @@ with open("api") as f: API_KEY = f.readline()
 class MovieTMDB:
     def __init__(self):
         
-        self.movie_info = {}
+        """ self.movie_info = {} """
         self.year = ""
         self.providers = []
         self.rt_score = ""
         self.lb_score = ""
         self.genres = []
         self.description = ""
+        self.runtime = ""
         self.director = ""
         self.cast = []
         self.poster = ""
@@ -41,6 +41,7 @@ class MovieTMDB:
         self.lb_score = self.get_lb_score(self.movie_info["title"])
         self.genres = self.return_genres_list(self.movie_info["genre_ids"])
         self.description = self.movie_info["overview"]
+        self.runtime = self.get_runtime(self.movie_info["id"])
         self.director, self.cast = self.get_crew_cast(self.movie_info["id"]).values()
         self.poster = POSTER_URL + self.movie_info["poster_path"]
 
@@ -93,7 +94,6 @@ class MovieTMDB:
         
         return(hbo_bulgaria)
 
-            
     def match_genre_to_id(self, genre_id: str) -> str:
         genre_matched = DF_GENRES[DF_GENRES["id"] == genre_id]
         genre_label = genre_matched["genre"].item()
@@ -118,6 +118,14 @@ class MovieTMDB:
         results = {"director": director,
                     "cast": cast}
         return(results)
+    
+    def get_runtime(self, movie_id:str) -> int:
+        """ Takes TMDB movie id
+            Returns how long the movie is in minutes"""
+        url = f"https://api.themoviedb.org/3/movie/{movie_id}?api_key={API_KEY}&language=en-US"
+        request = requests.get(url)
+        runtime = request.json()["runtime"]
+        return(runtime)
     
     def get_rt_score(self, movie_title: str) -> str:
         snake_title = snake_case(movie_title)
@@ -173,9 +181,9 @@ class MovieTMDB:
                            "Director": self.director,
                            "Cast": [self.cast],
                            "Genres": [self.genres],
-                           "Description":  [self.description],
+                           "Description": [self.description],
+                           "Runtime": self.runtime,
                            "Language": self.movie_info["original_language"],
                            "Poster": self.poster},
                            index = [0])
         return(df)
-    
