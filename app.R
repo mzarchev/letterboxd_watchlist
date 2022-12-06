@@ -23,7 +23,7 @@ ui <- fluidPage(
   
   br(),
   
-  fluidRow(column(9, offset = .2, titlePanel("Milan's watchlist yall")),
+  fluidRow(column(9, offset = .2, titlePanel("Milan's watchlist")),
            column(3, tags$a(href = "https://letterboxd.com/mzarchev/watchlist/",
                             img(height = 80, width = 80,
                                 style = "border-radius: 50%;",
