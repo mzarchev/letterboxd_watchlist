@@ -77,6 +77,7 @@ server <- function(input, output){
   # Filter according to inputs
   filter_movies <- function(){
     selected_genres <- paste(input$genres, collapse = "|")
+    selected_genres <- paste0(selected_genres, "|^$")
     
     dplyr::filter(df_movies_formatted,
                   Year >= input$year[1],
