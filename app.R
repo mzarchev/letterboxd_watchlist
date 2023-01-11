@@ -95,7 +95,8 @@ server <- function(input, output){
                   options = list(pageLength = 5,
                                  scrollX = T,
                                  columnDefs = list(list(visible = FALSE,
-                                                        targets = c("Cast",
+                                                        targets = c("Genres",
+                                                                    "Cast",
                                                                     "Description",
                                                                     "Language",
                                                                     "poster_url")))
