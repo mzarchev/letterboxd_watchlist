@@ -6,7 +6,7 @@ import pandas as pd
 df_movies_old = pd.read_parquet("data/df_movie_info.parquet")
 df_movies_old = df_movies_old.drop("Year", axis=1)
 # Get current watchlist data
-df_lb_watchlist = download_lb_watchlist("mzarchev")
+df_lb_watchlist = download_lb_watchlist("https://letterboxd.com/mzarchev/watchlist/")
 # Create a dataframe which have a variable for overlap in movies between watchlist and old dataframe 
 outer_join = df_movies_old.merge(df_lb_watchlist,
                                  left_on="Title",
